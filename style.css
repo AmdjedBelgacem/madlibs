@@ -23,6 +23,8 @@ body::before {
 h1 {
     color: #fff;
     margin-top: 2em;
+    width: 100vw;
+    text-align: center;
 }
   
 .madLibsEdit {
