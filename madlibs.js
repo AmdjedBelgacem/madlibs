@@ -27,23 +27,59 @@
  * Please go through this lesson: https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/regular-expressions/
  */
 function parseStory(rawStory) {
-  // Your code here.
-  return {}; // This line is currently wrong :)
-}
-
-/**
- * All your other JavaScript code goes here, inside the function. Don't worry about
- * the `then` and `async` syntax for now.
- *
- * NOTE: You should not be writing any code in the global namespace EXCEPT
- * declaring functions. All code should either:
- * 1. Be in a function.
- * 2. Be in .then() below.
- *
- * You'll want to use the results of parseStory() to display the story on the page.
- */
-getRawStory()
-  .then(parseStory)
-  .then((processedStory) => {
-    console.log(processedStory);
+  const madLibsEditDiv = document.querySelector('.madLibsEdit');
+  const madLibsPreviewDiv = document.querySelector('.madLibsPreview');
+  const regex = /(\w+)\[(\w+)\]/g;
+  let editedStory = '';
+  let previewStory = '';
+  const title = document.createElement('h1');
+  title.innerHTML = 'The Adventures of Vergil Sprada';
+  title.classList.add('title');
+  document.body.insertBefore(title, madLibsEditDiv);
+  rawStory.split(regex).forEach((str, index) => {
+    if (index % 3 === 0) {
+      editedStory += str;
+      previewStory += str;
+    } else if (index % 3 === 1) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = str;
+      input.placeholder = str;
+      input.classList.add('liveDisplay');
+      editedStory += input.outerHTML;
+      previewStory += `<span class="liveDisplay" data-input-name="${str}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`;
+    }
   });
+  madLibsEditDiv.innerHTML = editedStory;
+  const previewParagraph = document.createElement('p');
+  previewParagraph.innerHTML = previewStory;
+  madLibsPreviewDiv.appendChild(previewParagraph);
+  const liveDisplayInputs = document.querySelectorAll('.liveDisplay');
+  liveDisplayInputs.forEach((input) => {
+    input.addEventListener('input', () => {
+      const inputName = input.name;
+      const inputValue = input.value;
+      const previewSpans = document.querySelectorAll(`.liveDisplay[data-input-name="${inputName}"]`);
+      previewSpans.forEach((span) => {
+        span.innerHTML = inputValue;
+      });
+    });
+  });
+  return {}; 
+}
+  /**
+   * All your other JavaScript code goes here, inside the function. Don't worry about
+   * the `then` and `async` syntax for now.
+   *
+   * NOTE: You should not be writing any code in the global namespace EXCEPT
+   * declaring functions. All code should either:
+   * 1. Be in a function.
+   * 2. Be in .then() below.
+   *
+   * You'll want to use the results of parseStory() to display the story on the page.
+   */
+  getRawStory()
+    .then(parseStory)
+    .then((processedStory) => {
+      console.log(processedStory);
+    });
